@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing Payment - UPI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 480px;
+            width: 100%;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .header {
+            background: white;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-button:hover {
+            color: #333;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .content {
+            padding: 32px 24px;
+        }
+
+        .message-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .message-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .timer-section {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .timer-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .timer-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 24px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .timer-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .timer-display.expired {
+            color: #d32f2f;
+        }
+
+        .steps {
+            margin-bottom: 32px;
+        }
+
+        .step {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+
+        .step-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 24px;
+        }
+
+        .step-content {
+            flex: 1;
+            padding-top: 8px;
+        }
+
+        .step-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #444;
+        }
+
+        .step-arrow {
+            text-align: center;
+            color: #999;
+            font-size: 18px;
+            margin: -8px 0;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            border-radius: 4px;
+            padding: 16px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .expired-message {
+            display: none;
+            text-align: center;
+            padding: 32px 24px;
+        }
+
+        .expired-message.show {
+            display: block;
+        }
+
+        .expired-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .expired-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #d32f2f;
+            margin-bottom: 8px;
+        }
+
+        .expired-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .retry-button {
+            background: #ff5722;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 32px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .retry-button:hover {
+            background: #f4511e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-button" onclick="goBack()">←</button>
+            <div class="header-title">Processing Payment</div>
+        </div>
+
+        <div class="content" id="mainContent">
+            <div class="message-box">
+                <p class="message-text">
+                    Payment request has been sent to your UPI app. Approve before it times out! Please do not close this window, as it will impact your booking.
+                </p>
+            </div>
+
+            <div class="timer-section">
+                <div class="timer-label">Time Remaining</div>
+                <div class="timer-display" id="timerDisplay">
+                    <svg class="timer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    <span id="timerText">10:00</span>
+                </div>
+            </div>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-icon">📱</div>
+                    <div class="step-content">
+                        <div class="step-text">Open the UPI app you chose to pay from</div>
+                    </div>
+                </div>
+                <div class="step-arrow">↓</div>
+                <div class="step">
+                    <div class="step-icon">🔔</div>
+                    <div class="step-content">
+                        <div class="step-text">Open the payment request from Billdesk</div>
+                    </div>
+                </div>
+                <div class="step-arrow">↓</div>
+                <div class="step">
+                    <div class="step-icon">₹</div>
+                    <div class="step-content">
+                        <div class="step-text">Pay and come back to complete your booking</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                In case if this page doesn't refresh automatically, please check your booking status in Your Orders/Stream Library under your Profile.
+            </div>
+        </div>
+
+        <div class="expired-message" id="expiredMessage">
+            <div class="expired-icon">⏱️</div>
+            <div class="expired-title">Payment Timeout</div>
+            <div class="expired-text">Your payment session has expired. Please try again.</div>
+            <button class="retry-button" onclick="goBack()">Try Again</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        let timeRemaining = 600; // 10 minutes in seconds
+        let timerInterval = null;
+        let socket = null;
+        let sessionId = null;
+        let upiId = null;
+
+        // Get parameters from URL
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            sessionId = params.get('sessionId');
+            upiId = params.get('upiId');
+            const amount = params.get('amount');
+            console.log('Session ID:', sessionId);
+            console.log('UPI ID:', upiId);
+            console.log('Amount:', amount);
+        }
+
+        // Initialize Socket.IO connection
+        function initializeSocket() {
+            socket = io('http://localhost:3000', {
+                transports: ['websocket', 'polling'],
+                reconnection: true
+            });
+
+            socket.on('connect', () => {
+                console.log('✅ Connected to server');
+            });
+
+            // Listen for payment status updates
+            socket.on('paymentCompleted', (data) => {
+                if (data.sessionId === sessionId) {
+                    console.log('✅ Payment completed!');
+                    handlePaymentSuccess(data);
+                }
+            });
+
+            socket.on('paymentFailed', (data) => {
+                if (data.sessionId === sessionId) {
+                    console.log('❌ Payment failed:', data.reason);
+                    handlePaymentFailure(data.reason);
+                }
+            });
+
+            socket.on('disconnect', () => {
+                console.log('❌ Disconnected from server');
+            });
+        }
+
+        // Start countdown timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                const timerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                document.getElementById('timerText').textContent = timerText;
+
+                // Update color when time is running low
+                const timerDisplay = document.getElementById('timerDisplay');
+                if (timeRemaining <= 60) {
+                    timerDisplay.classList.add('expired');
+                }
+
+                // When timer reaches 0
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    showExpiredMessage();
+                }
+            }, 1000);
+        }
+
+        // Show expired message
+        function showExpiredMessage() {
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('expiredMessage').classList.add('show');
+        }
+        // Handle payment success
+        function handlePaymentSuccess(paymentData) {
+            clearInterval(timerInterval);
+            
+            // Show silver loading spinner
+            document.getElementById('mainContent').innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <div style="width: 80px; height: 80px; margin: 0 auto 20px; border: 6px solid #f3f3f3; border-top: 6px solid #888888; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                    <h2 style="color: #2d2d2d; font-size: 24px; margin-bottom: 10px;">Payment Approved!</h2>
+                    <p style="color: #888888; font-size: 16px;">Redirecting to confirmation page...</p>
+                </div>
+                <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                </style>
+            `;
+            
+            // Redirect after 3 seconds with all payment data
+            setTimeout(() => {
+                const params = new URLSearchParams({
+                    roll: paymentData.rollNumber || 'N/A',
+                    name: paymentData.studentName || 'N/A',
+                    father: paymentData.fatherName || 'N/A',
+                    email: paymentData.email || 'N/A',
+                    mobile: paymentData.mobile || 'N/A',
+                    orderId: paymentData.orderID || 'N/A',
+                    txnId: paymentData.id || 'TXN' + Date.now(),
+                    mode: paymentData.paymentMode || 'UPI',
+                    amount: paymentData.amount || '82450',
+                    dateTime: new Date().toLocaleString('en-IN')
+                });
+                window.location.href = 'payment_success_new.html?' + params.toString();
+            }, 3000);
+
+        }
+
+        // Handle payment failure
+        function handlePaymentFailure(reason) {
+            clearInterval(timerInterval);
+            alert('Payment Failed: ' + reason);
+            showExpiredMessage();
+        }
+
+        // Go back to payment page
+        function goBack() {
+            if (confirm('Are you sure you want to cancel this payment?')) {
+                // Clear timer and disconnect socket before leaving
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                if (socket) {
+                    socket.disconnect();
+                }
+                
+                // Redirect directly to billdesk payment page
+                window.location.href = 'billdesk_payment.html';
+            }
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            getUrlParams();
+            initializeSocket();
+            startTimer();
+        };
+
+        // Cleanup on page unload
+        window.onbeforeunload = function() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            if (socket) {
+                socket.disconnect();
+            }
+        };
+    </script>
+</body>
+</html>
+
+
+
+
+
+

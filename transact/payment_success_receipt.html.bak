@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>: School of Management Sciences, Varanasi : EPAY </title>
+<style>
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+}
+.gbrd1 {
+    border: 1px solid #333;
+}
+.gbrd2 {
+    border: 2px solid #000;
+    background: #fff;
+}
+.mtextblack {
+    font-size: 14px;
+    color: #000;
+}
+.textbig3 {
+    font-size: 18px;
+    font-weight: bold;
+    background: #f0f0f0;
+}
+.button4 {
+    background: #0066cc;
+    color: white;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.button4:hover {
+    background: #0052a3;
+}
+
+</style>
+</head>
+<body>
+<table width="805" border="0" cellpadding="0" cellspacing="0" align="center">
+    <tbody><tr> 
+      <td width="797" height="500" align="center" valign="top">
+        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="gbrd2">
+        <tbody><tr> 
+          <td width="796" height="48" valign="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="gbrd1">
+              <tbody><tr> 
+                <td width="797" height="48" align="center" valign="top">
+                  <img src="../images/header.jpg" width="420" height="120" onerror="this.style.display='none'">
+                </td>
+              </tr>
+            </tbody></table>
+          </td>
+        </tr>
+        <tr> 
+          <td height="48" valign="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+              <tbody><tr> 
+                <td width="797" height="48" valign="top">
+                  <table width="100%" border="1" cellpadding="0" cellspacing="0" class="mtextblack">
+                    <tbody>
+                    <tr align="center"> 
+                      <td height="40" colspan="2" valign="middle" class="textbig3"> 
+                        <div align="center"><strong>SEMESTER FEE RECEIPT (PROVISIONAL)</strong></div>
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td width="402" height="30" valign="middle">&nbsp;ROLL NUMBER</td>
+                      <td width="388" valign="middle" id="rollNumber">&nbsp;Loading...</td>
+                    </tr>
+                    <tr> 
+                      <td width="402" height="30" valign="middle">&nbsp;COURSE</td>
+                      <td valign="middle" id="course">&nbsp;MBA</td>
+                    </tr>
+                    <tr> 
+                      <td width="402" height="30" valign="middle">&nbsp;SEMESTER</td>
+                      <td valign="middle" id="semester">&nbsp;2</td>
+                    </tr>
+                    <tr> 
+                      <td width="402" height="30" valign="middle">&nbsp;STUDENT NAME</td>
+                      <td valign="middle" id="studentName">&nbsp;Loading...</td>
+                    </tr>
+                    <tr> 
+                      <td width="402" height="30" valign="middle">&nbsp;FATHER NAME</td>
+                      <td valign="middle" id="fatherName">&nbsp;Loading...</td>
+                    </tr>
+                    <tr> 
+                      <td width="402" height="30" valign="middle">&nbsp;TRANSACTION ID</td>
+                      <td valign="middle" id="transactionId">&nbsp;Loading...</td>
+                    </tr>
+                    <tr> 
+                      <td width="402" height="30" valign="middle">&nbsp;GATEWAY TRANSACTION ID</td>
+                      <td valign="middle" id="gatewayTxnId">&nbsp;Loading...</td>
+                    </tr>
+                    <tr> 
+                      <td width="402" height="30" valign="middle">&nbsp;BANK REFERENCE NO</td>
+                      <td valign="middle" id="bankRefNo">&nbsp;Loading...</td>
+                    </tr>
+                    <tr> 
+                      <td width="402" height="30" valign="middle">&nbsp;DATE OF TRANSACTION</td>
+                      <td valign="middle" id="transactionDate">&nbsp;Loading...</td>
+                    </tr>
+                    <tr> 
+                      <td width="402" height="30" valign="middle">&nbsp;FEE</td>
+                      <td valign="middle" id="fee">&nbsp;Rs. 82450/-</td>
+                    </tr>
+                    <tr> 
+                      <td width="402" height="30" valign="middle">&nbsp;FINE</td>
+                      <td valign="middle">&nbsp;Rs. 0/-</td>
+                    </tr>
+                    <tr> 
+                      <td width="402" height="30" valign="middle">&nbsp;TOTAL AMOUNT</td>
+                      <td valign="middle" id="totalAmount">&nbsp;Rs. 82450/-</td>
+                    </tr>
+                    <tr> 
+                      <td width="402" height="30" valign="middle">&nbsp;TRANSACTION TYPE</td>
+                      <td valign="middle">&nbsp;ONLINE SEMESTER FEE</td>
+                    </tr>
+                    <tr> 
+                      <td width="402" height="30" valign="middle">&nbsp;MODE OF PAYMENT</td>
+                      <td valign="middle" id="paymentMode">&nbsp;NET BANKING/ DEBIT CARD/ CREDIT CARD</td>
+                    </tr>
+                  </tbody></table>
+                </td>
+              </tr>
+            </tbody></table>
+          </td>
+        </tr>
+        <tr> 
+          <td height="163" valign="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="gbrd1">
+              <tbody><tr> 
+                <td width="796" height="45" align="center" valign="middle">
+                  <input name="b1" type="button" class="button4" value="PRINT" onclick="window.print();">
+                </td>
+              </tr>
+              <tr> 
+                <td height="60" align="center" valign="top">
+                  <p><strong>Campus: </strong>Khushipur,(Mohansarai-Mughalsarai Bypass), PO : Bachhaon, Varanasi- 221011<br>
+                    Phones: 7052055555, 8953761666, 8953940777</p>
+                  <p><strong>City Office : </strong>School of Management Sciences, 6th Floor, Vinayak Plaza, Maldahiya Crossing, Varanasi â€“ 221001,<br>
+                    Phone: 8400277770</p>
+                </td>
+              </tr>
+              <tr> 
+                <td height="65" align="center" valign="middle">
+                  <p>E-mail: info@smsvaranasi.com</p>
+                  <p>Website: www.smsvaranasi.com</p>
+                </td>
+              </tr>
+            </tbody></table>
+          </td>
+        </tr>
+      </tbody></table>
+      </td>
+      <td width="6">&nbsp;</td>
+    </tr>
+    <tr> 
+      <td height="5"></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<script>
+(async function() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('sessionId');
+
+    let rollNumber = urlParams.get('rollNumber');
+    let studentName = urlParams.get('studentName');
+    let fatherName = urlParams.get('fatherName');
+    let course = urlParams.get('course');
+    let semester = urlParams.get('semester');
+    let amount = urlParams.get('amount');
+    let paymentMode = urlParams.get('paymentMode');
+
+    // First, try to get data from session submission
+    if (sessionId) {
+      const resp = await fetch('/api/submission/' + encodeURIComponent(sessionId));
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data && data.success && data.submission) {
+          const s = data.submission;
+          rollNumber = rollNumber || (s.student && s.student.rollNumber) || null;
+          studentName = studentName || (s.student && s.student.name) || null;
+          fatherName = fatherName || (s.student && s.student.fatherName) || null;
+          course = course || (s.student && s.student.course) || null;
+          semester = semester || (s.student && s.student.semester) || null;
+          amount = amount || s.amount || null;
+          paymentMode = paymentMode || s.paymentMethod || 'NET BANKING/ DEBIT CARD/ CREDIT CARD';
+        }
+      }
+    }
+
+    // If we have a roll number but missing student details, fetch from student database
+    if (rollNumber && (!studentName || studentName === 'N/A' || !fatherName || fatherName === 'N/A')) {
+      try {
+        const studentResp = await fetch('/api/student/' + encodeURIComponent(rollNumber));
+        if (studentResp.ok) {
+          const studentData = await studentResp.json();
+          if (studentData && studentData.success && studentData.student) {
+            const st = studentData.student;
+            studentName = studentName || st.name;
+            fatherName = fatherName || st.fatherName;
+            course = course || st.course || 'MBA';
+            semester = semester || st.semester || '2';
+            console.log('✅ Student details fetched from database:', st.name);
+          }
+        }
+      } catch (err) {
+        console.warn('Could not fetch student details:', err);
+      }
+    }
+
+    document.getElementById('rollNumber').textContent = ' ' + (rollNumber || 'N/A');
+    document.getElementById('studentName').textContent = ' ' + (studentName || 'N/A');
+    document.getElementById('fatherName').textContent = ' ' + (fatherName || 'N/A');
+    document.getElementById('course').textContent = ' ' + (course || 'MBA');
+    document.getElementById('semester').textContent = ' ' + (semester || '2');
+
+    const transactionId = urlParams.get('transactionId') || ('TXN' + Date.now());
+    const gatewayTxnId = urlParams.get('gatewayTxnId') || ('CHD' + Math.random().toString(36).substr(2, 8).toUpperCase() + 'CHDS');
+    const bankRefNo = urlParams.get('bankRefNo') || Math.floor(100000000000 + Math.random() * 900000000000);
+    document.getElementById('transactionId').textContent = ' ' + transactionId;
+    document.getElementById('gatewayTxnId').textContent = ' ' + gatewayTxnId;
+    document.getElementById('bankRefNo').textContent = ' ' + bankRefNo;
+
+    const dateTime = urlParams.get('dateTime') || new Date().toLocaleString('en-IN');
+    document.getElementById('transactionDate').textContent = ' ' + dateTime;
+
+    const amt = parseInt(amount || '82450');
+    document.getElementById('fee').textContent = ' Rs. ' + amt.toLocaleString('en-IN') + '/-';
+    document.getElementById('totalAmount').textContent = ' Rs. ' + amt.toLocaleString('en-IN') + '/-';
+
+    document.getElementById('paymentMode').textContent = ' ' + (paymentMode || 'NET BANKING/ DEBIT CARD/ CREDIT CARD');
+  } catch (e) {
+    console.error('Receipt population error:', e);
+  }
+})();
+</script>
+</body>
+</html>

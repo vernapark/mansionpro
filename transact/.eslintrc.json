@@ -1,0 +1,31 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "script"
+  },
+  "globals": {
+    "io": "readonly",
+    "studentData": "writable",
+    "paymentSocket": "writable",
+    "paymentSessionId": "writable",
+    "modalTimerInterval": "writable",
+    "modalTimeRemaining": "writable"
+  },
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-undef": "error",
+    "no-extra-semi": "error",
+    "no-unexpected-multiline": "error",
+    "brace-style": ["error", "1tbs"],
+    "curly": ["error", "all"],
+    "eqeqeq": ["error", "always"],
+    "no-console": "off",
+    "prefer-const": "warn",
+    "no-var": "warn"
+  }
+}

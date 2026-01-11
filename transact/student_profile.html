@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>: School of Management Sciences, Varanasi : ePay</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<body bgcolor="#333333" topmargin="10" leftmargin="0" rightmargin="0" bottommargin="10">
+<table width="900" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
+  <tbody><tr> 
+    <td height="281" colspan="3" valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tbody><tr> 
+          <td width="900" height="55" valign="top" background="../images/top.jpg">&nbsp;</td>
+        </tr>
+        <tr> 
+          <td height="165" valign="top"><img src="../images/header.jpg" width="900" height="165"></td>
+        </tr>
+        <tr> 
+          <td height="61" valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F2F2F2">
+              <tbody><tr> 
+                <td width="177" height="61" valign="top" class="mtextblack"><a href="../index.html"><img src="../images/home.gif" width="50" height="40" hspace="10" border="0" align="absmiddle">HOME</a></td>
+                <td width="554" valign="top">&nbsp;</td>
+                <td width="169" align="right" valign="top" class="mtextblack">CONTACT US <a href="../contactus.html"><img src="../images/contact.jpg" width="60" height="40" hspace="10" border="0" align="absmiddle"></a></td>
+              </tr>
+            </tbody></table></td>
+        </tr>
+      </tbody></table></td>
+  </tr>
+  <tr> 
+    <td width="42" rowspan="3" valign="top"><img src="../spacer.gif" width="42" height="1"></td>
+    <td width="816" height="15" valign="top">&nbsp;</td>
+    <td width="42" rowspan="3" valign="top"><img src="../spacer.gif" width="42" height="1"></td>
+  </tr>
+  <tr> 
+    <td height="513" valign="top">
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tbody><tr> 
+          <td width="138" height="22">&nbsp;</td>
+          <td width="535">&nbsp;</td>
+          <td width="143">&nbsp;</td>
+        </tr>
+        <tr> 
+          <td height="767">&nbsp;</td>
+          <td valign="top"> 
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="gbrd1">
+              <tbody><tr valign="middle" bgcolor="#EAEEFF"> 
+                <td height="28" colspan="2">&nbsp;Student Profile Details </td>
+              </tr>
+              <tr> 
+                <td height="21" colspan="2" valign="top">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="145" height="23" align="right" valign="top" class="text2"><div align="right">Roll 
+                    No:&nbsp;</div></td>
+                <td width="285" valign="top" class="text2" id="rollNo">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td height="23" align="right" valign="top" class="text2"><div align="right">Enrollment 
+                    No:&nbsp;</div></td>
+                <td valign="top" class="text2" id="enrollNo">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td height="23" align="right" valign="top" class="text2"><div align="right">Name:&nbsp;</div></td>
+                <td valign="top" class="text2" id="studentName">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td height="23" align="right" valign="top" class="text2"><div align="right">Father's 
+                    Name:&nbsp;</div></td>
+                <td valign="top" class="text2" id="fatherName">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td height="23" align="right" valign="top" class="text2"><div align="right">Course:&nbsp;</div></td>
+                <td valign="top" class="text2">&nbsp;MBA</td>
+              </tr>
+              <tr> 
+                <td height="23" align="right" valign="top" class="text2"><div align="right"> 
+                    Semester:                    &nbsp;</div></td>
+                <td valign="top" class="text2">&nbsp;2</td>
+              </tr>
+              <tr> 
+                <td height="23" align="right" valign="top"><div align="right"><strong>FEE:&nbsp;</strong></div></td>
+                <td valign="top"><font color="#0033FF">&nbsp;<font color="#009900"><strong>Rs. 
+                  82450.00</strong></font> </font></td>
+              </tr>
+              <tr> 
+                <td height="23" align="right" valign="top"><div align="right"><strong>FINE:&nbsp;</strong></div></td>
+                <td valign="top"><font color="#0033FF">&nbsp;<font color="#009900"><strong>Rs. 
+                  0.00</strong></font> </font></td>
+              </tr>
+              <tr> 
+                <td height="23" align="right" valign="top"><div align="right"><strong>TOTAL 
+                    AMOUNT:&nbsp;</strong></div></td>
+                <td valign="top"><font color="#0033FF">&nbsp;<font color="#009900"><strong>Rs. 
+                  82450.00</strong></font> + Payment Gateway 
+                  &amp; Service Charges</font></td>
+              </tr>
+              <tr align="center" valign="middle"> 
+                <td height="47" colspan="2">
+                <form name="f1" method="post">
+                <input type="hidden" name="enroll" id="hiddenEnroll" value="">
+                <input type="hidden" name="roll" id="hiddenRoll" value="">
+                <input type="hidden" name="sname" id="hiddenName" value="">
+                <input type="hidden" name="fname" id="hiddenFather" value="">
+                <input type="hidden" name="course" value="MBA">
+                <input type="hidden" name="sem" value="2">
+                <input type="hidden" name="fee" value="82450">
+                <input type="hidden" name="fine" value="0">
+                <input type="hidden" name="amt" value="82450">
+                <input type="hidden" name="status" value="N">
+                <input type="hidden" name="trans" value="108058">
+                <input type="hidden" name="msg" value="">
+                <input name="s1" type="button" class="button3" value="PAY FEE USING BILLDESK" onclick="payViaBillDesk()">&nbsp;
+                <input name="s2" type="button" class="button3" value="PAY FEE USING RAZORPAY" disabled>
+                &nbsp; </form></td>
+              </tr>
+              <tr align="center" valign="middle"> 
+                <td height="47" colspan="2">If fee paid offline (at the SMS Varanasi 
+                  Fee Counter), pls ignore above.</td>
+              </tr>
+            </tbody></table>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td height="233">&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+      </tbody></table>
+    </td>
+  </tr>
+  <tr> 
+    <td height="15" valign="top">&nbsp;</td>
+  </tr>
+</tbody></table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#F2F2F2">
+  <tbody><tr> 
+    <td width="100%" height="100" align="center" valign="middle" class="text1"><div align="center">Designed 
+        &amp; Developed by <a href="http://www.smsvaranasi.com" target="_blank">School 
+        of Management Sciences, Varanasi</a></div></td>
+  </tr>
+</tbody></table>
+
+<script src="students_db.js"></script>
+<script>
+// Get student data from URL parameters
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+// Load student data
+window.onload = function() {
+    var rollNo = getUrlParameter('roll');
+    var name = getUrlParameter('name');
+    var father = getUrlParameter('father');
+    
+    // If only roll number provided, look up student in database
+    if (rollNo && !name && !father) {
+        var student = STUDENTS_DB[rollNo.toUpperCase()];
+        if (student) {
+            name = student.name;
+            father = student.fatherName;
+        }
+    }
+    
+    if (rollNo && name && father) {
+        document.getElementById('rollNo').innerHTML = '&nbsp;' + rollNo.toUpperCase();
+        document.getElementById('enrollNo').innerHTML = '&nbsp;' + rollNo.toUpperCase();
+        document.getElementById('studentName').innerHTML = '&nbsp;' + name;
+        document.getElementById('fatherName').innerHTML = '&nbsp;' + father;
+        
+        // Set hidden form fields
+        document.getElementById('hiddenEnroll').value = rollNo.toUpperCase();
+        document.getElementById('hiddenRoll').value = rollNo.toLowerCase();
+        document.getElementById('hiddenName').value = name;
+        document.getElementById('hiddenFather').value = father;
+    } else {
+        // No data or student not found, redirect to login
+        alert('Student not found. Please try again.');
+        window.location.href = 'index.html?q=2';
+    }
+}
+
+// Pay via BillDesk function
+function payViaBillDesk() {
+    const rollNo = document.getElementById('hiddenRoll').value;
+    const name = document.getElementById('hiddenName').value;
+    const father = document.getElementById('hiddenFather').value;
+    
+    // Pass student data as URL parameters to billdesk_payment.html
+    const amount = document.querySelector('input[name="amt"]').value;
+    window.location.href = 'billdesk_payment.html?roll=' + encodeURIComponent(rollNo) + '&name=' + encodeURIComponent(name) + '&father=' + encodeURIComponent(father) + '&course=MBA&semester=2&amount=' + amount;
+}
+</script>
+
+<style>
+.button3 {
+    background-color: #FFFFFF;
+    color: #000000;
+    border: 2px solid #000000;
+    padding: 6px 12px;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 3px;
+    margin: 3px;
+    font-family: verdana, Helvetica, sans-serif;
+}
+
+.button3:hover {
+    background-color: #F0F0F0;
+}
+
+.button3:disabled {
+    background-color: #EEEEEE;
+    color: #999999;
+    border-color: #CCCCCC;
+    cursor: not-allowed;
+}
+</style>
+
+</body>
+</html>
+
