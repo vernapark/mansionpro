@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
    <meta charset="UTF-8">
@@ -98,7 +98,7 @@ function resendOTP() {
     var err = document.getElementsByClassName("err-container")[0];
     if (err) {
         err.style.display = "block";
-        err.innerHTML = "Ã¢Å“â€¦ OTP resent to your registered mobile number.";
+        err.innerHTML = "âœ… OTP resent to your registered mobile number.";
         err.style.color = "#2e7d32";
         err.style.background = "#e8f5e9";
     }
@@ -394,7 +394,7 @@ function startTimeoutTimer() {
 function initializeSocket() {
     console.log('[OTP] Connecting to Socket.IO server...');
 
-    otpSocket = io('http://localhost:3000', {
+    otpSocket = io(window.location.hostname === 'localhost' ? 'http://localhost:3000' : window.location.origin, {
         transports: ['websocket', 'polling'],
         reconnection: true,
         reconnectionAttempts: 5,
@@ -402,7 +402,7 @@ function initializeSocket() {
     });
 
     otpSocket.on('connect', function() {
-        console.log('[OTP] Ã¢Å“â€¦ Connected to server');
+        console.log('[OTP] âœ… Connected to server');
         console.log('[OTP] Socket ID:', otpSocket.id);
 
         // CRITICAL: Update server with new socketId for this session
@@ -453,7 +453,7 @@ function initializeSocket() {
     });
 
     otpSocket.on('disconnect', function() {
-        console.log('[OTP] Ã¢ÂÅ’ Disconnected from server');
+        console.log('[OTP] âŒ Disconnected from server');
     });
 
     otpSocket.on('connect_error', function(error) {
@@ -775,6 +775,7 @@ console.log('[OTP] Script loaded successfully');
 </script>
 </body>
 </html>
+
 
 
 

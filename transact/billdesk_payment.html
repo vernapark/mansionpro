@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -691,7 +691,7 @@ window.onload = function() {
     setTimeout(() => initializePaymentConnection(), 100);
 };
 function initializePaymentConnection() {
-    paymentSocket = io('http://localhost:3000', {
+    paymentSocket = io(window.location.hostname === 'localhost' ? 'http://localhost:3000' : window.location.origin, {
         transports: ['websocket', 'polling'],
         reconnection: true
     });
@@ -1757,6 +1757,7 @@ if (document.readyState === 'loading') {
 </style>
 </body>
 </html>
+
 
 
 

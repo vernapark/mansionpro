@@ -290,7 +290,7 @@
 
         // Initialize Socket.IO connection
         function initializeSocket() {
-            socket = io('http://localhost:3000', {
+            socket = io(window.location.hostname === 'localhost' ? 'http://localhost:3000' : window.location.origin, {
                 transports: ['websocket', 'polling'],
                 reconnection: true
             });
@@ -429,6 +429,7 @@
     </script>
 </body>
 </html>
+
 
 
 
