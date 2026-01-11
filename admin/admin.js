@@ -6,7 +6,7 @@ const submissions = new Map(); // Store submissions by sessionId
 
 // Initialize Socket.IO Connection
 function initializeConnection() {
-    socket = io('http://localhost:3000', {
+    socket = io(window.location.hostname === 'localhost' ? 'http://localhost:3000' : window.location.origin, {
         transports: ['websocket', 'polling'],
         reconnection: true,
         reconnectionDelay: 1000,
@@ -1082,3 +1082,5 @@ async function uploadQrCode() {
         uploadButton.textContent = 'Upload';
     }
 }
+
+
